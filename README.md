@@ -29,6 +29,7 @@ Version Control: Git & GitHub
 ### Step 1: Clone the repository
 ```bash
 git clone https://github.com/disha2815/nox_event_lifecycle.git
+```
 
 ### Step 2: Go to project folder
 cd nox_event_lifecycle
