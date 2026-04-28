@@ -1,0 +1,15 @@
+<h1>{{ event.title }}</h1>
+
+<p><b>Date:</b> {{ event.date }}</p>
+<p>{{ event.description }}</p>
+
+<hr>
+
+<h2>Register for this Event</h2>
+
+<form method="post" action="">
+    {% csrf_token %}
+    <p>Registration form will be added next.</p>
+</form>
+
+<a href="/dashboard/">Go to Dashboard</a>

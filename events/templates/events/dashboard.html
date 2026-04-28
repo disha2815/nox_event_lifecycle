@@ -1,0 +1,27 @@
+<h1>Event Lifecycle Dashboard</h1>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Participant</th>
+        <th>Event</th>
+        <th>Attendance</th>
+        <th>Feedback</th>
+        <th>Certificate</th>
+    </tr>
+
+    {% for reg in registrations %}
+    <tr>
+        <td>{{ reg.participant.name }}</td>
+        <td>{{ reg.event.title }}</td>
+        <td>{{ reg.attended }}</td>
+        <td>{{ reg.feedback_submitted }}</td>
+        <td>
+            {% if reg.is_certificate_eligible %}
+                <a href="{% url 'certificate' reg.id %}">Download Certificate</a>
+            {% else %}
+                Locked
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
