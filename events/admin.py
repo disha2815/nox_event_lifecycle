@@ -6,8 +6,13 @@ from .models import Participant, Event, Registration
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
+    list_display = ('student_id', 'name', 'email', 'transaction_id', 'registered_events')
 
+    def registered_events(self, obj):
+        registrations = Registration.objects.filter(participant=obj)
+        return ", ".join([r.event.title for r in registrations]) or "No event"
+
+    registered_events.short_description = "Registered Events"
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):

@@ -7,10 +7,14 @@ from django.db import models
 
 class Participant(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
+    transaction_verified = models.BooleanField(default=False)
+    student_id = models.CharField(max_length=30, unique=True, blank=True, null=True)
+    transaction_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.student_id})"
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -47,12 +51,18 @@ class Registration(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     attended = models.BooleanField(default=False)
     feedback_submitted = models.BooleanField(default=False)
+    feedback_rating = models.IntegerField(blank=True, null=True)
+    feedback_comment = models.TextField(blank=True, null=True)
     qr_code = models.ImageField(upload_to='qr/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.participant} - {self.event}"
 
     def is_certificate_eligible(self):
-        return self.attended and self.feedback_submitted
+        return (
+            self.attended and
+            self.feedback_submitted and
+            self.participant.transaction_verified
+        )
     
     

@@ -6,4 +6,5 @@ urlpatterns = [
     path('certificate/<int:reg_id>/', views.generate_certificate, name='certificate'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('event/<int:event_id>/', views.event_detail, name='event_detail'),
+    path('register/', views.register_event, name='register_event'),
 ]

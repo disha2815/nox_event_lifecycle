@@ -2,12 +2,14 @@ from django.http import HttpResponse
 
 from django.http import HttpResponse
 
+from django.http import HttpResponse
+
 def home(request):
     return HttpResponse("""
         <h1>🎓 Event Lifecycle & Certification System</h1>
         <p>Project is running successfully.</p>
-        <a href="/dashboard/">Go to Dashboard</a>
-        <br><br>
+        <a href="/register/">Register for Event</a><br><br>
+        <a href="/dashboard/">Go to Dashboard</a><br><br>
         <a href="/admin/">Go to Django Admin</a>
     """)
 
@@ -49,3 +51,45 @@ from .models import Event, Participant, Registration
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     return render(request, 'events/event_detail.html', {'event': event})
+
+from django.shortcuts import render, redirect
+from .forms import RegistrationForm
+
+
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .forms import RegistrationForm
+
+
+def register_event(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            participant = form.save()
+
+            send_mail(
+                subject="Event Registration Confirmed",
+                message=f"""
+Hello {participant.name},
+
+Your event registration is confirmed.
+
+Student ID: {participant.student_id}
+Transaction ID: {participant.transaction_id}
+
+Thank you,
+Event Lifecycle & Certification Team
+""",
+                from_email=None,
+                recipient_list=[participant.email],
+                fail_silently=False,
+            )
+
+            return render(request, 'events/registration_success.html', {
+                'participant': participant
+            })
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'events/register.html', {'form': form})
